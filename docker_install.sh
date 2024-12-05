@@ -1,5 +1,8 @@
 #!/bin/bash
 
+
+# compativel com debian, ubuntu, fedora, rhel e arch
+
 # Verifica se o script foi executado com os devidos privilégios
 if [ "$(id -u)" -ne 0 ]; then
     echo "O script deve ser executado com privilégios de super usuário!"
