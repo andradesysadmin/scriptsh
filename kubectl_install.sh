@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Instalação do kubectl independente da distro
+# Script de instalação do kind para todas as distribuições linux
 
 # Verifica se o script foi executado com os devidos privilégios
 if [ "$(id -u)" -ne 0 ]; then
