@@ -1,5 +1,8 @@
 #!/bin/bash
 
+
+# Script de instalação da minha aplicação PHP, MyMp3
+
 if [ "$(id -u)" -ne 0 ]; then
     echo "O script deve ser executado com privilégios de super usuário!"
     exit 1

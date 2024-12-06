@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# Script de instalação do meu blog contruido em e docker laravel
+
 if [ "$(id -u)" -ne 0 ]; then
     echo "O script deve ser executado com privilégios de super usuário!"
     exit 1
@@ -67,14 +69,45 @@ fi
 if command -v docker >/dev/null 2>&1; then
     echo "Docker está instalado!"
 else
-    if [ ! -f "docker_install.sh" ]; then
-        echo "O script de instalação do Docker (docker_install.sh) não foi encontrado!"
+    # instalando o docker em distribuições
+    if command -v apt >/dev/null; then
+    PACKAGE_MANAGER="apt"
+    INSTALL_CMD="sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin"
+    DISTRO_CODENAME=$(lsb_release -c | awk '{print $2}')
+    CONFIGS="sudo apt-get update
+                sudo apt-get install -y ca-certificates curl
+                sudo install -m 0755 -d /etc/apt/keyrings
+                sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+                sudo chmod a+r /etc/apt/keyrings/docker.asc
+                echo \"deb [arch=\$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu noble stable\" | \
+                sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+                sudo apt-get update"
+    elif command -v dnf >/dev/null; then
+        PACKAGE_MANAGER="dnf"
+        INSTALL_CMD="sudo dnf install -y docker-ce docker-ce-cli containerd.io"
+        CONFIGS="sudo dnf install -y dnf-plugins-core && sudo dnf config-manager --add-repo https://download.docker.com/linux/fedora/docker-ce.repo"
+    elif command -v yum >/dev/null; then
+        PACKAGE_MANAGER="yum"
+        INSTALL_CMD="sudo yum install -y docker-ce docker-ce-cli containerd.io"
+        CONFIGS="sudo yum install -y yum-utils && sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo"
+    elif command -v pacman >/dev/null; then
+        PACKAGE_MANAGER="pacman"
+        INSTALL_CMD="sudo pacman -S --noconfirm docker"
+        CONFIGS="sudo pacman -Sy"
+    elif command -v zypper >/dev/null; then
+        PACKAGE_MANAGER="zypper"
+        INSTALL_CMD="sudo zypper install -y docker"
+        CONFIGS="sudo zypper refresh"
+    else
+        echo "Gerenciador de pacotes não suportado!"
         exit 1
     fi
     
-    sudo chmod +x docker_install.sh
-    sudo ./docker_install.sh
-    echo "Docker instalado com sucesso!"
+    if [ $? -ne 0 ]; then
+
+        echo "Docker instalado com sucesso!"
+
+    fi
 fi
 
 docker rm -f $APP_NAME || true

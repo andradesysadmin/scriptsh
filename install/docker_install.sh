@@ -1,7 +1,10 @@
 #!/bin/bash
 
-
-# compativel com debian, ubuntu, fedora, rhel e arch
+###########################################
+#                                         #
+# Testado no Ubuntu, Fedora, Rhel e Arch  #
+#                                         #
+###########################################
 
 # Verifica se o script foi executado com os devidos privilégios
 if [ "$(id -u)" -ne 0 ]; then
@@ -32,26 +35,14 @@ if command -v apt >/dev/null; then
     PACKAGE_MANAGER="apt"
     INSTALL_CMD="sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin"
     DISTRO_CODENAME=$(lsb_release -c | awk '{print $2}')
-    
-    if [ -f /etc/lsb-release ] && grep -q "Ubuntu" /etc/lsb-release; then
-        CONFIGS="sudo apt-get update
-                 sudo apt-get install -y ca-certificates curl
-                 sudo install -m 0755 -d /etc/apt/keyrings
-                 sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
-                 sudo chmod a+r /etc/apt/keyrings/docker.asc
-                 echo \"deb [arch=\$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu $DISTRO_CODENAME stable\" | \
-                 sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-                 sudo apt-get update"
-    elif [ -f /etc/debian_version ]; then
-        CONFIGS="sudo apt-get update
-                 sudo apt-get install -y ca-certificates curl
-                 sudo install -m 0755 -d /etc/apt/keyrings
-                 sudo curl -fsSL https://download.docker.com/linux/debian/gpg -o /etc/apt/keyrings/docker.asc
-                 sudo chmod a+r /etc/apt/keyrings/docker.asc
-                 echo \"deb [arch=\$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/debian $DISTRO_CODENAME stable\" | \
-                 sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-                 sudo apt-get update"
-    fi
+    CONFIGS="sudo apt-get update
+                sudo apt-get install -y ca-certificates curl
+                sudo install -m 0755 -d /etc/apt/keyrings
+                sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+                sudo chmod a+r /etc/apt/keyrings/docker.asc
+                echo \"deb [arch=\$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu noble stable\" | \
+                sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+                sudo apt-get update"
 elif command -v dnf >/dev/null; then
     PACKAGE_MANAGER="dnf"
     INSTALL_CMD="sudo dnf install -y docker-ce docker-ce-cli containerd.io"
