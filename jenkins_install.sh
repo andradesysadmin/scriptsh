@@ -1,5 +1,18 @@
 #!/bin/bash
 
+
+
+###########################################################################
+#                                                                         #
+#  Script de instalação do Jenkins para as principais distribuições linux #
+#                        Feito por Gabriel Andrade                        # 
+#                                  v1.4                                   #
+#     Suporta os gerenciadore de pacotes apt, yum, dnf, pacman e zypper   #
+#                                                                         #
+###########################################################################
+
+
+
 # verifica se o script foi executado como root
 if [ "$(id -u)" -ne 0 ]; then
 
